@@ -421,7 +421,7 @@ pFetchLine =
        char ')'
        crlfP
        return $ Right $ (read num, pairs)
-    where pPair = do key <- anyChar `manyTill` space
+    where pPair = do key <- pKey
                      value <- (do char '('
                                   v <- pParen `sepBy` space
                                   char ')'
@@ -446,6 +446,11 @@ pFetchLine =
                        v <- many1 atomChar
                        return ('\\':v))
                <|> many1 atomChar
+          pKey = (do string "BODY["
+                     v <- anyChar `manyTill` (char ']')
+                     space
+                     return ("BODY[" ++ v ++ "]"))
+               <|> anyChar `manyTill` space
 
 
 

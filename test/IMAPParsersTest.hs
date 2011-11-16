@@ -156,6 +156,14 @@ fetchTest =
           , [(12, [("FLAGS", "(\\Seen \\Deleted)")])])
       ~=? eval' pFetch "a005" "* 12 FETCH (FLAGS (\\Seen \\Deleted))\r\n\
                               \a005 OK +FLAGS completed\r\n"
+    , ( OK Nothing "FETCH completed"
+          , MboxUpdate Nothing Nothing
+          , [(12, [("BODY[HEADER.FIELDS (MESSAGE-ID)]"
+                   , "Message-Id: <123454@example.com>\r\n\r\n" )])])
+      ~=? eval' pFetch "a006" "* 12 FETCH (BODY[HEADER.FIELDS (MESSAGE-ID)] {36}\r\n\
+                              \Message-Id: <123454@example.com>\r\n\r\n\
+                              \)\r\n\
+                              \a006 OK FETCH completed\r\n"
     ]
 
 
