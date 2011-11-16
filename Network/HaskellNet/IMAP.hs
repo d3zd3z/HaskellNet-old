@@ -417,7 +417,7 @@ fetchCommand conn command proc =
 
 storeFull :: BSStream s => IMAPConnection s -> String -> FlagsQuery -> Bool -> IO [(UID, [Flag])]
 storeFull conn uidstr query isSilent =
-    fetchCommand conn ("UID STORE " ++ uidstr ++ flags query) procStore
+    fetchCommand conn ("UID STORE " ++ uidstr ++ " " ++ flags query) procStore
     where fstrs fs = "(" ++ (concat $ intersperse " " $ map show fs) ++ ")"
           toFStr s fstrs =
               s ++ (if isSilent then ".SILENT" else "") ++ " " ++ fstrs
