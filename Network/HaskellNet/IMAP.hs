@@ -385,12 +385,12 @@ fetchSize conn uid =
        return $ maybe 0 read $ lookup "RFC822.SIZE" lst
 fetchHeaderFields, fetchHeaderFieldsNot :: BSStream s => IMAPConnection s -> UID -> [String] -> IO ByteString
 fetchHeaderFields conn uid hs =
-    do lst <- fetchByString conn uid ("BODY[HEADER.FIELDS "++unwords hs++"]")
+    do lst <- fetchByString conn uid ("BODY[HEADER.FIELDS ("++unwords hs++")]")
        return $ maybe BS.empty BS.pack $
               lookup ("BODY[HEADER.FIELDS "++unwords hs++"]") lst
 fetchHeaderFieldsNot conn uid hs = 
     do lst <- fetchByString conn uid ("BODY[HEADER.FIELDS.NOT "++unwords hs++"]")
-       return $ maybe BS.empty BS.pack $ lookup ("BODY[HEADER.FIELDS.NOT "++unwords hs++"]") lst
+       return $ maybe BS.empty BS.pack $ lookup ("BODY[HEADER.FIELDS.NOT ("++unwords hs++")]") lst
 fetchFlags :: BSStream s => IMAPConnection s -> UID -> IO [Flag]
 fetchFlags conn uid =
     do lst <- fetchByString conn uid "FLAGS"
