@@ -33,7 +33,7 @@ module Network.HaskellNet.IMAP
     , search, store, copy
       -- * fetch commands
     , fetch, fetchHeader, fetchSize, fetchHeaderFields, fetchHeaderFieldsNot
-    , fetchFlags, fetchR, fetchByString, fetchByStringR
+    , fetchFlags, fetchR, fetchByString, fetchByStringR, fetchByStringT
       -- * other types
     , Flag(..), Attribute(..), MailboxStatus(..)
     , SearchQuery(..), FlagsQuery(..)
@@ -411,6 +411,12 @@ fetchByStringR conn (s, e) command =
     fetchCommand conn ("UID FETCH "++show s++":"++show e++" "++command) proc
     where proc (n, ps) =
               (maybe (toEnum (fromIntegral n)) read (lookup "UID" ps), ps)
+
+fetchByStringT :: BSStream s => IMAPConnection s -> String -> String -> IO [(UID, [(String, String)])]
+fetchByStringT conn range command =
+   fetchCommand conn ("UID FETCH " ++ range ++ " " ++ command) proc
+   where proc (n, ps) =
+             (maybe (toEnum (fromIntegral n)) read (lookup "UID" ps), ps)
 
 fetchCommand conn command proc =
     fmap (map proc) $ sendCommand conn command pFetch
